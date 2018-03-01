@@ -1,0 +1,357 @@
+﻿<html>
+<head>
+    <style>
+        body {
+          background: #257c8d;
+        }
+
+        .logo {
+          width: 300px;
+          height: 180px;
+          margin: 10px auto;
+          background-image: url(images/logo.png);
+          background-position: center center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+
+        .main-panel {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 0 100px;
+        }
+
+        .select-wrapper, .role {
+            flex: 1 1 26%;
+        }
+
+        .select-wrapper {
+          display: flex;
+          width: 45%;
+          justify-content: space-between;
+          align-content: flex-start;
+          flex-wrap: wrap;
+        }
+
+        .element {
+          margin-bottom: 40px;
+          width: 100px;
+          height: 40px;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          padding: 0 20px;
+          text-align: center;
+          background-color: #70a1b2;
+          cursor: pointer;
+          color: white;
+          font-weight: bold;
+          transition: background-color 1s;
+        }
+
+        .element.selected {
+          color: #45746a;
+          background-color: #ecf0be;
+        }
+
+        .button-wrapper {
+           margin-top: 70px;
+           width: 100%;
+           height: 100px;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+        }
+
+        button {
+          width: 120px;
+          height: 40px;
+          padding: 0 20px;
+          color: white;
+          border: none;
+          background-color: #dd5a48;
+          cursor: pointer;
+          text-align: center;
+          font-weight: bold;
+          font-size: 14px;
+          transition: background-color 200ms;
+        }
+
+        button:hover {
+          background-color: #d6bdb9;
+        }
+
+        .role {
+          background-image: url(images/placeholder.png);
+          background-position: center center;
+          background-size: contain;
+          background-repeat: no-repeat;
+          display: flex;
+          padding-top: 50px;
+          justify-content: center;
+          align-items: flex-end;
+          font-size: 26px;
+          color: white;
+          position: relative;
+        }
+
+        .name {
+          position: absolute;
+          bottom: -50px;
+        }
+
+        .po {
+          background-image: url(images/PORes.png);
+        }
+
+        .developer {
+          background-image: url(images/DEVRes.png);
+        }
+
+        .pm {
+          background-image: url(images/PMRes.png);
+        }
+
+        .qa {
+          background-image: url(images/QARes.png);
+        }
+
+        .hr {
+          background-image: url(images/HRRes.png);
+        }
+
+        .devOps {
+          background-image: url(images/DevOpsRes.png);
+        }
+
+        .girly {
+          background-image: url(images/GirlRes.png);
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo"></div>
+</header>
+<main>
+    <div class="main-panel">
+        <div class="select-wrapper odd">
+
+        </div>
+        <div class="role">
+        <div class="name"></div>
+        </div>
+        <div class="select-wrapper even">
+
+        </div>
+    </div>
+    <div class="button-wrapper">
+        <button onclick="calculate()">Generate</button>
+    </div>
+    <script>
+        const qualities = {
+  tech: [
+    {
+      name: 'Coding excellence',
+      value: 20,
+    },
+    {
+      name: 'Math',
+      value: 10,
+    },
+    {
+      name: 'Operating systems',
+      value: 10,
+    },
+    {
+      name: 'Networks',
+      value: 10,
+    },
+    {
+      name: 'Algorithms',
+      value: 10,
+    },
+    {
+      name: 'Data analysis',
+      value: 10,
+    },
+  ],
+  soft: [
+    {
+      name: 'Fast learning',
+      value: 10,
+    },
+    {
+      name: 'Adaptability',
+      value: 10,
+    },
+    {
+      name: 'Stress tolerance',
+      value: 10,
+    },
+    {
+      name: 'Teamwork skills',
+      value: 20,
+    },
+    {
+      name: 'Lazyness',
+      value: 10,
+    },
+    {
+      name: 'Riskiness',
+      value: 10,
+    },
+    {
+      name: 'Responsibility',
+      value: 10,
+    },
+    {
+      name: 'Kindness',
+      value: 10,
+    },
+    {
+      name: 'Communication skills',
+      value: 20,
+    },
+    {
+      name: 'Attentive to details',
+      value: 10,
+    },
+  ],
+};
+
+const persons = {
+  developer: {
+    tech: 50,
+    soft: 50,
+    name: 'Developer',
+    required: ['Lazyness', 'Coding excellence'],
+  },
+  pm: {
+    tech: 20,
+    soft: 80,
+    name: 'Project manager',
+  },
+  qa: {
+    tech: 60,
+    soft: 40,
+    name: 'QA Engineer',
+    required: ['Attentive to details'],
+  },
+  hr: {
+    tech: 10,
+    soft: 90,
+    name: 'HR Manager',
+  },
+  devOps: {
+    tech: 80,
+    soft: 20,
+    name: 'DevOps',
+    required: ['Operating systems', 'Networks'],
+  },
+  po: {
+    tech: 30,
+    soft: 70,
+    name: 'Product owner',
+  },
+  girly: {
+    tech: 0,
+    soft: 100,
+    name: 'You better marry a rich fellow'
+  },
+  disco: {},
+};
+
+let resultingArray = [];
+
+Object.keys(qualities).forEach((key) => {
+  resultingArray = [ ...resultingArray, ...qualities[key].map((el) => {
+    return {
+      ...el,
+      type: key,
+    };
+  })];
+});
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+resultingArray = shuffle(resultingArray);
+
+resultingArray.forEach((el, key) => {
+  const node = document.createElement('div');
+  node.innerHTML = el.name;
+  node.addEventListener('click', (e) => {
+    if (e.target.classList.contains('selected')) {
+      e.target.classList.remove('selected');
+      el.selected = false;
+    } else {
+      e.target.classList.add('selected');
+      el.selected = true;
+    }
+  });
+  node.setAttribute('class', `element ${el.type}`);
+  if (key % 2) {
+    document.querySelector('.select-wrapper.odd').appendChild(node);
+  } else {
+    document.querySelector('.select-wrapper.even').appendChild(node);
+  }
+});
+
+function calculate() {
+  const person = {
+    tech: 0,
+    soft: 0,
+    included: [],
+  };
+
+  resultingArray.filter(el => el.selected).forEach((el) => {
+    person[el.type] += el.value;
+    person.included.push(el.name);
+  });
+
+  let flatPersons = Object.keys(persons).map(el => {
+    return {
+      type: el,
+      ...persons[el],
+    };
+  });
+
+  flatPersons = flatPersons.filter(el => {
+    return !el.required || (el.required && el.required.every(elem => person.included.includes(elem)));
+  });
+
+  let closestMatch = -1;
+
+  flatPersons.forEach((el, key) => {
+    if (closestMatch === -1 && Math.abs(el.tech - person.tech) <= 15 && Math.abs(el.soft - person.soft <= 15)) {
+        closestMatch = key;
+    } else if (closestMatch !== -1) {
+      if (Math.abs(el.tech - person.tech + el.soft - person.soft) < Math.abs(flatPersons[closestMatch].tech - person.tech + flatPersons[closestMatch].soft - person.soft)) {
+        closestMatch = key;
+      }
+    }
+  });
+
+  const res = flatPersons[closestMatch] || {};
+  document.querySelector('.name').innerHTML = res.name;
+
+  document.querySelector('.role').setAttribute('class', `role ${res.type}`);
+
+  document.querySelectorAll('.element').forEach((el) => { el.setAttribute('class', 'element') });
+  resultingArray.forEach((el) => {
+    el.selected = false;
+  });
+  console.log(flatPersons[closestMatch] || persons.disco);
+}
+    </script>
+</main>
+</body>
+</html>
