@@ -340,7 +340,7 @@ function calculate() {
     }
   });
 
-  const res = flatPersons[closestMatch] || {};
+  const res = flatPersons[closestMatch] || { name: 'Sorry, no matches found' };
   document.querySelector('.name').innerHTML = res.name;
 
   document.querySelector('.role').setAttribute('class', `role ${res.type}`);
@@ -349,7 +349,6 @@ function calculate() {
   resultingArray.forEach((el) => {
     el.selected = false;
   });
-  console.log(flatPersons[closestMatch] || persons.disco);
 }
     </script>
 </main>
